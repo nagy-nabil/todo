@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
 import {versions} from '#preload';
-import './App.css';
+import './global.css';
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <div className="App">
+    <div className="App bg-slate-900">
       <div>
         <a
+          className='text-lg'
           href="https://vitejs.dev"
           target="_blank"
           rel="noreferrer"
@@ -21,7 +22,7 @@ function App() {
           rel="noreferrer"
         ></a>
       </div>
-      <h1>Vite + React</h1>
+      <h1 className="text-6xl text-gray-800">Vite + React</h1>
       <div className="card">
         <button onClick={() => setCount(count => count + 1)}>count is {count}</button>
         <p>
