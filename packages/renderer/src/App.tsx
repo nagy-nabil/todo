@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {versions} from '#preload';
 import './App.css';
 
 function App() {
@@ -10,12 +11,14 @@ function App() {
         <a
           href="https://vitejs.dev"
           target="_blank"
-          rel='noreferrer'
-        >vite</a>
+          rel="noreferrer"
+        >
+          vite
+        </a>
         <a
           href="https://reactjs.org"
           target="_blank"
-          rel='noreferrer'
+          rel="noreferrer"
         ></a>
       </div>
       <h1>Vite + React</h1>
@@ -26,6 +29,10 @@ function App() {
         </p>
       </div>
       <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
+      <p>
+        we are using versions node-{versions.node} chrome-{versions.chrome} electron-
+        {versions.electron}
+      </p>
     </div>
   );
 }
