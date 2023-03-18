@@ -1,11 +1,11 @@
 export type Step = {
     id: number;
-    task: string;
+    name: string;
     checked: boolean;
-    createAt: Date;
 };
 
 export type Task = {
+    id: number;
     name: string;
     checked: boolean;
     steps: Step[];

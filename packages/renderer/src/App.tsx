@@ -1,6 +1,6 @@
 import React from 'react';
 import './global.css';
-import Todo from './components/Todo';
+// import Todo from './components/Todo';
 import TaskList from './components/TasksList';
 
 function App() {
@@ -8,18 +8,24 @@ function App() {
         <div className="App">
             <TaskList
                 tasksList={[
-                    {name: 'first list', tasks: []},
-                    {name: 'second list', tasks: []},
+                    'list one',
+                    'lsit two',
+                    'list one',
+                    'lsit two',
+                    'list one',
+                    'lsit two',
+                    'list one',
+                    'lsit two',
                 ]}
             />
-            <Todo
+            {/* <Todo
                 todo={{
                     checked: false,
                     createAt: new Date(),
                     id: 21,
                     task: 'task content',
                 }}
-            />
+            /> */}
         </div>
     );
 }
