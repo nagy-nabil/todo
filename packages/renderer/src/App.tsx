@@ -1,33 +1,19 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './global.css';
 // import Todo from './components/Todo';
 import TaskList from './components/TasksList';
+import {dbRead} from '#preload';
+import {type DbSchema} from '../../../types/db';
 
 function App() {
-    return (
-        <div className="App">
-            <TaskList
-                tasksList={[
-                    'list one',
-                    'lsit two',
-                    'list one',
-                    'lsit two',
-                    'list one',
-                    'lsit two',
-                    'list one',
-                    'lsit two',
-                ]}
-            />
-            {/* <Todo
-                todo={{
-                    checked: false,
-                    createAt: new Date(),
-                    id: 21,
-                    task: 'task content',
-                }}
-            /> */}
-        </div>
-    );
+    const [list, setList] = useState<DbSchema | null>(null);
+    useEffect(() => {
+        const db = async () => {
+            setList(await dbRead());
+        };
+        db();
+    });
+    return <div className="App">{list !== null ? <TaskList tasksList={list} /> : 'lodaing'}</div>;
 }
 
 export default App;
