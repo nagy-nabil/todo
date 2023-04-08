@@ -1,20 +1,14 @@
-export type Step = {
-    id: number;
-    name: string;
-    checked: boolean;
-};
-
 export type Task = {
-    id: number;
+    id: string;
     name: string;
     checked: boolean;
-    steps: Step[];
 };
 
 export type List = {
+    id: string;
+    checked: boolean;
     name: string;
-    tasks: Task[];
+    tasks: {[k: string]: Task};
 };
 
-
-export type DbSchema = List[];
+export type DbSchema = {[k: List['id']]: List};
