@@ -2,7 +2,7 @@ import {resolve} from 'node:path';
 import fs from 'fs/promises';
 import {v4 as uuidv4} from 'uuid';
 // import {type Database, verbose} from 'sqlite3';
-import {type DbSchema} from '../../../types/db';
+import type {Task, DbSchema} from '../../../types/db';
 // const sqlite3 = verbose();
 
 //! current db location is cwd change it later
@@ -80,17 +80,56 @@ export async function taskPost(listID: string, task: string): Promise<DbSchema[s
     return db[listID];
 }
 
-//TODO make it generic update function
-export async function taskCheck(
+// type task but with no id => to not give the user ability to change the id
+type TaskNoID = {
+    [k in keyof Task]?: k extends 'id' ? never : Task[k];
+};
+export async function taskUpdate(
     listID: string,
     taskID: DbSchema[string]['tasks'][string]['id'],
+    data: TaskNoID,
 ): Promise<DbSchema[string]['tasks']> {
     const db = await dbRead();
     if (listID in db) {
-        db[listID]['tasks'][taskID]['checked'] = !db[listID]['tasks'][taskID]['checked'];
+        db[listID]['tasks'][taskID] = {...db[listID]['tasks'][taskID], ...data};
+        console.log(
+            "🪵 [db.ts:94] ~ token ~ \x1b[0;32mdb[listID]['tasks'][taskID]\x1b[0m = ",
+            db[listID]['tasks'][taskID],
+        );
     } else {
         throw new Error('list name not exist');
     }
     await dbWrite(db);
     return db[listID]['tasks'];
+}
+
+/**
+ * @param listID
+ * @returns void
+ */
+export async function listDelete(listID: string): Promise<void> {
+    const db = await dbRead();
+    if (listID in db) {
+        delete db[listID];
+    } else {
+        throw new Error('list name not exist');
+    }
+    await dbWrite(db);
+    return;
+}
+
+/**
+ * return list content
+ * @param listID
+ * @returns void
+ */
+export async function taskDelete(listID: string, taskID: string): Promise<void> {
+    const db = await dbRead();
+    if (listID in db && taskID in db[listID]['tasks']) {
+        delete db[listID]['tasks'][taskID];
+    } else {
+        throw new Error('listID neither taskID exist');
+    }
+    await dbWrite(db);
+    return;
 }

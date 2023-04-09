@@ -19,7 +19,7 @@
     "lint": "eslint . --ext js,mjs,cjs,ts,mts,cts,vue",
     "postinstall": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/update-electron-vendors.mjs",
     "format": "npx prettier --write \"**/*.{js,mjs,cjs,ts,mts,cts,vue,json}\""
-  },
+  } ,
   "devDependencies": {
     "@types/node": "18.15.3",
     "@types/react": "^18.0.28",

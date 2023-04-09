@@ -1,1 +1,1 @@
-export {dbRead, dbWrite, listPost, taskPost, taskCheck} from '../../main/src/db';
+export {dbRead, dbWrite, listPost, taskPost, taskUpdate} from '../../main/src/db';
