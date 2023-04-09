@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import './global.css';
-// import Todo from './components/Todo';
 import TaskList from './components/TasksList';
 import {dbRead} from '#preload';
 import {type DbSchema} from '../../../types/db';

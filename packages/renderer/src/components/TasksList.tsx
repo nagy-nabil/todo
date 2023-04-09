@@ -8,9 +8,9 @@ const TaskList: React.FC<{tasksList: DbSchema}> = ({tasksList}) => {
     const [smolBtnVisible, setSmolBtnVisible] = useState<boolean>(false);
     const [tab, setTab] = useState<string>('');
     return (
-        <div className="flex flex-row rounded-md">
+        <div className="flex flex-col md:flex-row rounded-md">
             <button
-                className="w-5 h-3 md:hidden lg:hidden"
+                className="w-10 h-3  m-4 md:hidden lg:hidden"
                 onClick={() => {
                     setSmolBtnVisible(prev => !prev);
                 }}
@@ -19,10 +19,18 @@ const TaskList: React.FC<{tasksList: DbSchema}> = ({tasksList}) => {
             </button>
             <div
                 className={
-                    (smolBtnVisible ? ' ' : 'hidden ') +
-                    'resize-x h-screen min-w-1/3 bg-gray-900 text-slate-400 p-2 md:flex md:flex-col lg:w-1/5'
+                    (smolBtnVisible ? 'absolute ' : 'hidden ') +
+                    'z-50 h-screen min-w-1/3 bg-gray-900 text-slate-400 p-2 mr-5 md:flex md:flex-col lg:w-1/5'
                 }
             >
+                <button
+                    className="w-10 h-3  m-4 md:hidden lg:hidden"
+                    onClick={() => {
+                        setSmolBtnVisible(prev => !prev);
+                    }}
+                >
+                    |||
+                </button>
                 <h1 className="m-3 text-lg">Welcome Baby this your list</h1>
                 <input
                     type="text"
@@ -81,6 +89,14 @@ const TaskList: React.FC<{tasksList: DbSchema}> = ({tasksList}) => {
                 </form>
             </div>
             <TaskTask list={tasksList[tab] || null} />
+
+            {/* add overlay when sidebar is active on small screens */}
+            {smolBtnVisible && (
+                <div
+                    className="fixed md:hidden top-0 left-0 w-full h-full bg-gray-900 opacity-50 z-20"
+                    onClick={() => setSmolBtnVisible(false)}
+                />
+            )}
         </div>
     );
 };
