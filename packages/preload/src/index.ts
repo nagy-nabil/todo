@@ -5,8 +5,22 @@
 import {ipcRenderer} from 'electron';
 
 export {versions} from './versions';
-export {dbRead, dbWrite, listPost, taskPost, taskUpdate} from './dbApi';
 
-export function createTodoMenu(listID: string, todoID: string) {
-    ipcRenderer.send('create-menu', listID, todoID);
+export {
+    dbRead,
+    dbWrite,
+    listPost,
+    taskPost,
+    taskUpdate,
+    listDelete,
+    listUpdate,
+    taskDelete,
+} from '../../main/src/db';
+
+export function createTaskMenu(listID: string, todoID: string) {
+    ipcRenderer.send('create-task-menu', listID, todoID);
+}
+
+export function createListMenu(listID: string) {
+    ipcRenderer.send('create-list-menu', listID);
 }

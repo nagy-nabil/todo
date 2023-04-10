@@ -1,7 +1,7 @@
 import {app, BrowserWindow, ipcMain} from 'electron';
 import {join} from 'node:path';
 import {URL} from 'node:url';
-import {createMenuHandler} from './itemMenu';
+import {createListItemMenu, createTaskItemMenu} from './menuHandler';
 
 async function createWindow() {
     const browserWindow = new BrowserWindow({
@@ -43,7 +43,8 @@ async function createWindow() {
             ? import.meta.env.VITE_DEV_SERVER_URL
             : new URL('../renderer/dist/index.html', 'file://' + __dirname).toString();
 
-    ipcMain.on('create-menu', createMenuHandler);
+    ipcMain.on('create-list-menu', createListItemMenu);
+    ipcMain.on('create-task-menu', createTaskItemMenu);
     await browserWindow.loadURL(pageUrl);
 
     return browserWindow;

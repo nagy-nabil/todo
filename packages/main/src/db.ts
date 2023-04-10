@@ -2,7 +2,7 @@ import {resolve} from 'node:path';
 import fs from 'fs/promises';
 import {v4 as uuidv4} from 'uuid';
 // import {type Database, verbose} from 'sqlite3';
-import type {Task, DbSchema} from '../../../types/db';
+import type {Task, DbSchema, List} from '../../../types/db';
 // const sqlite3 = verbose();
 
 //! current db location is cwd change it later
@@ -75,6 +75,22 @@ export async function taskPost(listID: string, task: string): Promise<DbSchema[s
         db[listID]['tasks'][id] = {checked: false, id, name: task};
     } else {
         throw new Error('list name not exist');
+    }
+    await dbWrite(db);
+    return db[listID];
+}
+
+// type list but with no id => to not give the user ability to change the id
+type ListNoID = {
+    [k in keyof List]?: k extends 'id' ? never : List[k];
+};
+export async function listUpdate(listID: string, data: ListNoID): Promise<DbSchema[string]> {
+    const db = await dbRead();
+    if (listID in db) {
+        db[listID] = {...db[listID], ...data};
+        console.log('🪵 [db.ts:93] ~ token ~ \x1b[0;32mdb[listID]\x1b[0m = ', db[listID]);
+    } else {
+        throw new Error('list does not exist');
     }
     await dbWrite(db);
     return db[listID];

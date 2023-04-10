@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import {type DbSchema} from '../../../../types/db';
-import {listPost} from '#preload';
+import {listPost, createListMenu} from '#preload';
 import listIcon from '../../assets/list.svg';
 import TaskTask from './TaskTask';
 // sidebar
 const TaskList: React.FC<{tasksList: DbSchema}> = ({tasksList}) => {
     const [smolBtnVisible, setSmolBtnVisible] = useState<boolean>(false);
+    const [focusIndex, setFocusIndex] = useState<null | number>(null);
     const [tab, setTab] = useState<string>('');
     return (
         <div className="flex flex-col md:flex-row rounded-md">
@@ -38,15 +39,22 @@ const TaskList: React.FC<{tasksList: DbSchema}> = ({tasksList}) => {
                     placeholder="Search"
                 />
                 <div className="flex flex-col flex-1 overflow-y-auto border-b border-white/20 -mr-2">
-                    {Object.entries(tasksList).map(list => {
+                    {Object.entries(tasksList).map((list, index) => {
                         // 0 => id, 1=> list
                         return (
                             <button
-                                className="flex flex-row p-2 my-3 w-full text-left hover:bg-slate-500"
+                                className={`flex flex-row p-2 my-3 w-full text-left hover:bg-slate-500 ${
+                                    index === focusIndex ? 'border-4 border-red-800' : ''
+                                }`}
                                 key={list[0]}
                                 value={list[1].id}
                                 onClick={e => {
                                     setTab((e.target as HTMLButtonElement).value);
+                                    setFocusIndex(index);
+                                }}
+                                onContextMenu={e => {
+                                    e.preventDefault();
+                                    createListMenu(list[1].id);
                                 }}
                             >
                                 <img
@@ -60,7 +68,7 @@ const TaskList: React.FC<{tasksList: DbSchema}> = ({tasksList}) => {
                     })}
                 </div>
                 <form
-                    className="add-task flex "
+                    className="add-task flex p-3"
                     onSubmit={async e => {
                         e.preventDefault();
                         // Read the form data
