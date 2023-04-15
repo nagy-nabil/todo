@@ -17,12 +17,9 @@ const Todo: React.FC<{listID: string; todo: Task}> = ({listID, todo}) => {
                 e.preventDefault();
                 createTaskMenu(listID, todo.id);
             }}
-            onClick={() => {
-                setStatusEditing(true);
-            }}
         >
             <input
-                className="mr-2"
+                className="mr-2 max-w-full h-fit overflow-x-auto"
                 type="checkbox"
                 value={todo.id}
                 disabled={isChanging}
@@ -52,7 +49,13 @@ const Todo: React.FC<{listID: string; todo: Task}> = ({listID, todo}) => {
                     }}
                 />
             ) : (
-                <span>{checked ? <del>{todo.name}</del> : todo.name}</span>
+                <span
+                    onClick={() => {
+                        setStatusEditing(true);
+                    }}
+                >
+                    {checked ? <del>{todo.name}</del> : todo.name}
+                </span>
             )}
             {/* <p>{new Date(todo.createAt).toUTCString()}</p> */}
         </div>
