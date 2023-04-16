@@ -1,9 +1,11 @@
 import React, {useState, useEffect, useMemo} from 'react';
 import {distance} from 'fastest-levenshtein';
+import {FaSearch, FaRegPlusSquare} from 'react-icons/fa';
 import {type DbSchema} from '../../../../types/db';
 import {listPost, createListMenu, dbRead} from '#preload';
 import listIcon from '../../assets/list.svg';
 import TaskTask from './TaskTask';
+import InputWithIcon from './InputWithIcon';
 
 function filterDB(db: DbSchema, query: string): DbSchema {
     // shitty code let's go
@@ -17,7 +19,7 @@ function filterDB(db: DbSchema, query: string): DbSchema {
 }
 
 // sidebar
-const TaskList: React.FC = () => {
+const TaskList: React.FC<{soundEffect: HTMLAudioElement}> = ({soundEffect}) => {
     const [list, setList] = useState<DbSchema>();
     const [smolBtnVisible, setSmolBtnVisible] = useState<boolean>(false);
     const [focusIndex, setFocusIndex] = useState<null | number>(null);
@@ -52,7 +54,7 @@ const TaskList: React.FC = () => {
             <div
                 className={
                     (smolBtnVisible ? 'absolute ' : 'hidden ') +
-                    'z-50 h-screen min-w-1/3 bg-gray-900 text-slate-400 p-2 mr-5 md:flex md:flex-col lg:w-1/5'
+                    'z-50 h-screen min-w-1/3 bg-base-100  p-2 mr-5 md:flex md:flex-col lg:w-1/5 '
                 }
             >
                 <button
@@ -63,8 +65,11 @@ const TaskList: React.FC = () => {
                 >
                     |||
                 </button>
-                <h1 className="m-3 text-lg">Welcome Baby this your list</h1>
-                <form
+                <h1 className="m-3 text-lg ">Welcome Baby this your list</h1>
+                <InputWithIcon
+                    Icon={FaSearch}
+                    inputName="searchQuery"
+                    placeHolder="search.."
                     onSubmit={e => {
                         e.preventDefault();
                         const form = e.target as HTMLFormElement;
@@ -75,14 +80,7 @@ const TaskList: React.FC = () => {
                             throw new Error('filter form not working');
                         }
                     }}
-                >
-                    <input
-                        name="searchQuery"
-                        type="text"
-                        className="p-2"
-                        placeholder="Search"
-                    />
-                </form>
+                />
                 <div className="flex flex-col flex-1 overflow-y-auto border-b border-white/20 -mr-2">
                     {/* show lists */}
                     {listShow !== undefined
@@ -91,7 +89,9 @@ const TaskList: React.FC = () => {
                               return (
                                   <button
                                       className={`flex flex-row p-2 my-3 w-full text-left hover:bg-slate-500 ${
-                                          index === focusIndex ? 'border-4 border-red-800' : ''
+                                          index === focusIndex
+                                              ? 'bg-secondary rounded-md text-neutral'
+                                              : ''
                                       }`}
                                       key={list[0]}
                                       value={list[1].id}
@@ -115,8 +115,10 @@ const TaskList: React.FC = () => {
                           })
                         : 'loading'}
                 </div>
-                <form
-                    className="add-task flex p-3"
+                <InputWithIcon
+                    Icon={FaRegPlusSquare}
+                    placeHolder="Add List"
+                    inputName="name"
                     onSubmit={async e => {
                         e.preventDefault();
                         // Read the form data
@@ -125,26 +127,20 @@ const TaskList: React.FC = () => {
 
                         // Or you can work with it as a plain object:
                         const formJson = Object.fromEntries(formData.entries());
+                        if ((formJson['name'] as string) === '') return;
                         await listPost(formJson['name'] as string);
                         // Clear the input field
                         const input = form.querySelector('input[name="name"]') as HTMLInputElement;
                         input.value = '';
                     }}
-                >
-                    <input
-                        name="name"
-                        type="text"
-                        placeholder="New Task Name"
-                    />
-                    <button
-                        type="submit"
-                        className="p-2 w-full hover:bg-slate-500 "
-                    >
-                        Add List
-                    </button>
-                </form>
+                />
             </div>
-            {list && <TaskTask list={list[tab] || null} />}
+            {list && (
+                <TaskTask
+                    list={list[tab] || null}
+                    soundEffect={soundEffect}
+                />
+            )}
 
             {/* add overlay when sidebar is active on small screens */}
             {smolBtnVisible && (
